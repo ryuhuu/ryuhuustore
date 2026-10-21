@@ -1,0 +1,213 @@
+        #navbar {
+            --island-ink: #0f172a; --island-muted: #25364c;
+            --island-tint: rgba(255,255,255,.66); --island-fallback: rgba(248,250,252,.93);
+            --island-edge: rgba(255,255,255,.72); --island-highlight: rgba(255,255,255,.50);
+            --island-control: rgba(255,255,255,.24); --island-control-edge: rgba(15,23,42,.12);
+            --island-hover: rgba(255,255,255,.58); --island-discord: #4338ca;
+        }
+        .dark #navbar {
+            --island-ink: #f8fafc; --island-muted: #e2e8f0;
+            --island-tint: rgba(8,15,28,.60); --island-fallback: rgba(13,20,34,.93);
+            --island-edge: rgba(255,255,255,.24); --island-highlight: rgba(255,255,255,.15);
+            --island-control: rgba(255,255,255,.07); --island-control-edge: rgba(255,255,255,.16);
+            --island-hover: rgba(255,255,255,.16); --island-discord: #c7d2fe;
+        }
+        #navbar { --island-ease: cubic-bezier(.22,1,.36,1); position: fixed; z-index: 50;
+            top: max(16px, env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%);
+            width: min(calc(100% - 32px), 1060px); padding: 0;
+            transition: width .48s var(--island-ease); }
+        #navbar .island-shell { display: flex; align-items: center; gap: 12px; width: 100%;
+            padding: 8px 12px; border: 1px solid var(--island-edge); border-radius: 40px;
+            background: linear-gradient(135deg,var(--island-highlight),transparent 55%), var(--island-tint);
+            color: var(--island-ink);
+            -webkit-backdrop-filter: blur(22px) saturate(155%);
+            backdrop-filter: blur(22px) saturate(155%);
+            box-shadow: 0 8px 28px rgba(2,6,23,.13), inset 0 1px 0 var(--island-highlight), inset 0 -1px 0 rgba(255,255,255,.04);
+            transition: padding .48s var(--island-ease), gap .48s var(--island-ease); }
+        #navbar .island-brand { display: flex; align-items: center; gap: 10px; min-height: 44px; flex-shrink: 0;
+            padding: 0 4px; background: transparent; border: 0; color: var(--island-ink); cursor: pointer; }
+        #navbar .island-logo { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+            width: 32px; height: 32px; border-radius: 50%; overflow: hidden;
+            background: linear-gradient(135deg,#3b82f6,#172554); color: #fff; font-size: 14px; font-weight: 700;
+            transition: width .48s var(--island-ease), height .48s var(--island-ease); }
+        #navbar .island-logo img { width: 100%; height: 100%; object-fit: cover; }
+        #navbar .island-logo [hidden] { display: none; }
+        #navbar .island-name { font-size: 14px; font-weight: 650; letter-spacing: -.025em; white-space: nowrap; }
+        #navbar .island-links { display: flex; align-items: center; justify-content: center; gap: 24px; flex: 1;
+            overflow: hidden; opacity: 1; max-width: 520px; max-height: 44px;
+            transition: max-width .48s var(--island-ease), opacity .18s; }
+        #navbar .island-links a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--island-muted); font-size: 14px; white-space: nowrap; }
+        #navbar .island-links a:hover { color: var(--island-ink); }
+        #navbar .island-links .fa-discord { color: var(--island-discord); }
+        #navbar .island-controls { display: flex; align-items: center; justify-content: center; gap: 8px;
+            max-width: 220px; max-height: 44px; opacity: 1; overflow: hidden; margin-left: auto;
+            transition: max-width .48s var(--island-ease), max-height .48s var(--island-ease), opacity .18s; }
+        #navbar .island-controls button, #navbar .island-toggle { position: relative; display: flex; align-items: center;
+            justify-content: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%;
+            background: var(--island-control); border: 1px solid var(--island-control-edge); color: var(--island-ink); font-size: 14px; cursor: pointer;
+            transition: background .2s, color .2s; }
+        #navbar .island-controls button:hover, #navbar .island-toggle:hover { background: var(--island-hover); }
+        #navbar .island-toggle { background: transparent; color: var(--island-muted); }
+        #navbar .island-toggle i { transition: transform .48s var(--island-ease); }
+        #navbar .island-cart-count { position: absolute; top: 0; right: 0; min-width: 16px; height: 16px; border-radius: 10px;
+            padding: 0 3px; background: #2563eb; color: #fff; font: 700 10px/16px system-ui,sans-serif; }
+        #navbar button:focus-visible, #navbar a:focus-visible { outline: 2px solid #93c5fd; outline-offset: -2px; }
+        #navbar.is-compact { width: 260px; }
+        #navbar.is-compact .island-shell { padding: 4px 8px; gap: 0; }
+        #navbar.is-compact .island-logo { width: 28px; height: 28px; }
+        #navbar.is-compact .island-brand { flex: 1; }
+        #navbar.is-compact .island-links, #navbar.is-compact .island-controls { max-width: 0; max-height: 0; opacity: 0; pointer-events: none; margin: 0; }
+        #navbar.is-compact .island-toggle i { transform: rotate(180deg); }
+        #games, #faq { scroll-margin-top: 110px; }
+        @media (min-width: 768px) and (max-width: 1099px) {
+            #navbar .island-shell { flex-wrap: wrap; }
+            #navbar .island-links { order: 4; flex: 1 0 100%; max-width: 100%; }
+            #navbar.is-compact .island-shell { flex-wrap: nowrap; }
+            #navbar.is-compact .island-links { flex: 0 0 0; }
+        }
+        /* Phone island expands horizontally, never to a second row. */
+        @media (max-width: 767px) {
+            #navbar { top: max(12px, env(safe-area-inset-top, 0px)); width: min(calc(100% - 32px), 480px); }
+            #navbar .island-shell { flex-wrap: nowrap; gap: 6px; padding: 8px; border-radius: 40px; }
+            #navbar .island-brand { flex: 0 0 auto; min-width: 44px; gap: 0; }
+            #navbar .island-name { max-width: 0; opacity: 0; overflow: hidden; transition: max-width .48s var(--island-ease), opacity .18s; }
+            #navbar .island-links { display: none; }
+            #navbar .island-controls { order: 0; flex: 1 1 0; min-width: 0; max-width: 220px; max-height: 44px; margin-left: auto; gap: 4px; }
+            #navbar .island-toggle { order: 0; }
+            #navbar.is-compact .island-shell { flex-wrap: nowrap; gap: 0; }
+            #navbar.is-compact .island-brand { flex: 1; gap: 8px; }
+            #navbar.is-compact .island-name { max-width: 110px; opacity: 1; }
+            #navbar.is-compact .island-controls { flex: 0 0 0; margin: 0; gap: 0; }
+            #navbar .header-cart { display: flex; }
+            #app-container { padding-top: 112px; }
+        }
+        @media (min-width: 460px) and (max-width: 767px) {
+            #navbar .island-brand { gap: 8px; }
+            #navbar .island-name { max-width: 110px; opacity: 1; }
+        }
+        @media (max-width: 359px) {
+            /* The cart remains available in the bottom dock on very narrow phones. */
+            #navbar .island-controls .header-cart { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #navbar, #navbar * { transition: none !important; animation: none !important; }
+        }
+
+        /* Readable, low-cost fallback for unsupported browsers and GPU saver. */
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            #navbar .island-shell { background-color: var(--island-fallback); }
+        }
+        html.perf-lite #navbar .island-shell {
+            backdrop-filter: none; -webkit-backdrop-filter: none;
+            background-color: var(--island-fallback);
+        }
+        @media (prefers-reduced-transparency: reduce) {
+            #navbar .island-shell { backdrop-filter: none; -webkit-backdrop-filter: none; background-color: var(--island-fallback); }
+        }
+
+        /* Ryo live wallpaper: local assets, no external video dependency. */
+        body { position: relative; isolation: isolate; }
+        #store-wallpaper { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; background: #070b24; }
+        #store-wallpaper img, #store-wallpaper video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+        #store-wallpaper video { opacity: 0; transition: opacity .4s ease; }
+        #store-wallpaper.is-playing video { opacity: 1; }
+        #store-wallpaper::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(248,250,252,.88), rgba(248,250,252,.84) 45%, rgba(248,250,252,.94)); }
+        .dark #store-wallpaper::after { background: linear-gradient(180deg, rgba(3,7,18,.60), rgba(3,7,18,.57) 42%, rgba(3,7,18,.78)); }
+        body:has(#store-wallpaper) .ambient-light { display: none; }
+        body[data-store-view="checkout"] #store-wallpaper { visibility: hidden; }
+        html.perf-lite #store-wallpaper video { display: none; }
+        @media (max-width: 767px) { #store-wallpaper img, #store-wallpaper video { object-position: 50% 40%; } }
+        @media (prefers-reduced-motion: reduce) { #store-wallpaper video { display: none; transition: none; } }
+
+        /* Clear-glass navigation: shared material on the top island and bottom dock.
+           Keep text fully opaque; only the glass surface is translucent. */
+        :root {
+            --clear-glass-fill: rgba(255,255,255,.12);
+            --clear-glass-shine: rgba(255,255,255,.24);
+            --clear-glass-edge: rgba(255,255,255,.48);
+            --clear-glass-top: rgba(255,255,255,.70);
+            --clear-glass-bottom: rgba(100,116,139,.13);
+            --clear-glass-ink: #162238;
+            --clear-glass-muted: #334155;
+            --clear-glass-selected: rgba(255,255,255,.36);
+            --clear-glass-control: rgba(255,255,255,.09);
+            --clear-glass-shadow: rgba(15,23,42,.10);
+        }
+        :root.dark {
+            --clear-glass-fill: rgba(8,12,22,.10);
+            --clear-glass-shine: rgba(255,255,255,.075);
+            --clear-glass-edge: rgba(255,255,255,.22);
+            --clear-glass-top: rgba(255,255,255,.43);
+            --clear-glass-bottom: rgba(255,255,255,.12);
+            --clear-glass-ink: #f8fafc;
+            --clear-glass-muted: #e2e8f0;
+            --clear-glass-selected: rgba(255,255,255,.14);
+            --clear-glass-control: rgba(255,255,255,.035);
+            --clear-glass-shadow: rgba(0,0,0,.18);
+        }
+        #navbar, .dark #navbar {
+            --island-ink: var(--clear-glass-ink);
+            --island-muted: var(--clear-glass-muted);
+            --island-control: var(--clear-glass-control);
+            --island-control-edge: rgba(148,163,184,.12);
+            --island-hover: var(--clear-glass-selected);
+        }
+        #navbar .island-shell, #mobile-dock, .dark #mobile-dock {
+            background: linear-gradient(115deg, var(--clear-glass-shine), transparent 42%, rgba(255,255,255,.025) 78%, var(--clear-glass-shine)), var(--clear-glass-fill);
+            border: 1px solid var(--clear-glass-edge);
+            border-top-color: var(--clear-glass-top);
+            border-bottom-color: var(--clear-glass-bottom);
+            color: var(--clear-glass-ink);
+            -webkit-backdrop-filter: blur(8px) saturate(150%);
+            backdrop-filter: blur(8px) saturate(150%);
+            box-shadow: 0 8px 24px var(--clear-glass-shadow), inset 0 1px 0 rgba(255,255,255,.20), inset 1px 0 0 rgba(255,255,255,.10), inset -1px 0 0 rgba(255,255,255,.07), inset 0 -1px 0 rgba(255,255,255,.08);
+        }
+        #mobile-dock .dock-item { color: var(--clear-glass-muted); text-shadow: 0 1px 4px rgba(0,0,0,.04); }
+        #mobile-dock .dock-item:is([aria-current="page"], [aria-current="location"]) {
+            color: var(--clear-glass-ink);
+            background: var(--clear-glass-selected);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.17), 0 2px 8px rgba(0,0,0,.04);
+        }
+        #navbar .island-controls button, #navbar .island-toggle { box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+        #navbar .island-brand, #navbar .island-links, #navbar .island-controls, #mobile-dock .dock-items { position: relative; }
+        @media (hover: hover) and (pointer: fine) {
+            #mobile-dock .dock-item:hover { color: var(--clear-glass-ink); background: var(--clear-glass-selected); }
+        }
+        /* Without blur, add tint to separate navigation from text scrolling behind it. */
+        html.perf-lite #navbar .island-shell, html.perf-lite #mobile-dock { --clear-glass-fill: rgba(248,250,252,.70); }
+        html.dark.perf-lite #navbar .island-shell, html.dark.perf-lite #mobile-dock { --clear-glass-fill: rgba(8,12,22,.70); }
+        html.perf-lite #navbar .island-shell, html.perf-lite #mobile-dock {
+            -webkit-backdrop-filter: none; backdrop-filter: none;
+            background: linear-gradient(115deg, var(--clear-glass-shine), transparent 48%, var(--clear-glass-shine)), var(--clear-glass-fill);
+        }
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            #navbar .island-shell, #mobile-dock { --clear-glass-fill: rgba(248,250,252,.70); }
+            .dark #navbar .island-shell, .dark #mobile-dock { --clear-glass-fill: rgba(8,12,22,.70); }
+            #navbar .island-shell, #mobile-dock { background: linear-gradient(115deg, var(--clear-glass-shine), transparent 48%, var(--clear-glass-shine)), var(--clear-glass-fill); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #navbar .island-shell, #mobile-dock { --clear-glass-fill: rgba(248,250,252,.70); }
+            .dark #navbar .island-shell, .dark #mobile-dock { --clear-glass-fill: rgba(8,12,22,.70); }
+            #navbar .island-shell, #mobile-dock { -webkit-backdrop-filter: none; backdrop-filter: none; background: linear-gradient(115deg, var(--clear-glass-shine), transparent 48%, var(--clear-glass-shine)), var(--clear-glass-fill); }
+        }
+
+*{box-sizing:border-box}a{text-decoration:none}button,input{font:inherit}body{padding-top:100px;padding-bottom:96px;min-height:100vh;background:#030712;font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;color:var(--text-primary)}
+:root{--text-primary:#f8fafc;--text-secondary:#cbd5e1;--text-tertiary:#a8b4c7;--glass-border:rgba(255,255,255,.14);--ios-bg:#030712;--color-60:#030712;--color-30:rgba(9,14,26,.74);--color-10:#3b82f6}
+.bg-gradient,.glowing-orbs{display:none!important}.glass-panel,.cart-container,.cart-summary,.qris-payment,.empty-cart{background:linear-gradient(135deg,rgba(255,255,255,.085),rgba(255,255,255,.022)),rgba(9,14,26,.74)!important;border:1px solid var(--glass-border)!important;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.10)}
+#navbar{height:auto;margin:0;display:block;max-width:none}#navbar .island-shell{height:auto}#navbar .island-controls a{position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;border:1px solid rgba(148,163,184,.12);border-radius:50%;color:var(--island-ink);background:var(--clear-glass-control)}
+#navbar .cart-count{position:absolute;right:0;top:0;min-width:16px;height:16px;align-items:center;justify-content:center;background:#2563eb;color:#fff;border-radius:10px;font-size:10px}#navbar .island-brand{font-family:inherit}
+.breadcrumb{margin-top:12px}.product-shell{max-width:896px;grid-template-columns:minmax(0, 320px) minmax(0,1fr);min-height:0;border-radius:24px}.product-visual{padding:32px}.product-name{font-size:30px}.panel-scroll{padding:28px 24px 20px}.service-item{cursor:pointer;width:100%;text-align:left;color:var(--text-primary);min-height:64px;gap:12px}.service-item .price-amount{white-space:nowrap}.service-duration{overflow-wrap:anywhere}.service-sub{color:var(--text-secondary)}.service-item.active{background:rgba(59,130,246,.16);border-color:#3b82f6}.visual-caption{font-size:14px;color:var(--text-secondary)}.mini-badge{font-size:12px}.action-bar{padding:20px 24px;flex-wrap:wrap}.action-buttons{width:100%;display:flex;gap:8px}.action-buttons .btn{flex:1;justify-content:center;padding:12px;font-size:14px;min-height:44px}.selected-value{font-size:14px}.tab-btn{min-height:44px}.status-note{font-size:14px;line-height:1.6;padding:16px;background:rgba(148,163,184,.09);border:1px solid rgba(148,163,184,.24);border-radius:12px;margin:16px 0}.product-meta{flex-wrap:wrap}.related-products{max-width:896px}.btn-primary,.checkout-button{background:#2563eb!important;box-shadow:none!important}.qty-btn,.icon-btn{min-width:44px;min-height:44px}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #93c5fd;outline-offset:3px}.tabs{overflow-x:auto}.tab-btn{white-space:nowrap}.info-list,.feature-list{font-size:14px}.panel-scroll>.section-label{font-size:14px}footer{background:rgba(3,7,18,.6)}
+#product-dock{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:90;display:flex;gap:8px;padding:8px;border-radius:28px;background:linear-gradient(115deg,rgba(255,255,255,.075),transparent 42%,rgba(255,255,255,.025)),rgba(8,12,22,.1);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px) saturate(150%);box-shadow:0 8px 24px rgba(0,0,0,.18)}#product-dock a{min-width:62px;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#e2e8f0;font-size:11px;gap:2px}#product-dock i{font-size:16px}
+html.light{--text-primary:#0f172a;--text-secondary:#334155;--text-tertiary:#475569;--ios-bg:#f8fafc;--color-60:#f8fafc;--color-30:#e2e8f0;--glass-border:rgba(15,23,42,.14)}html.light body{background:#f8fafc;color:#0f172a}html.light .glass-panel,html.light .cart-container,html.light .cart-summary,html.light .qris-payment,html.light .empty-cart{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(255,255,255,.52)),rgba(255,255,255,.7)!important;box-shadow:0 8px 32px rgba(0,0,0,.05)}html.light .product-visual{background:rgba(255,255,255,.3)!important}html.light .service-item,html.light .text-input,html.light #qty,html.light .action-bar,html.light .icon-btn{background:rgba(148,163,184,.08);color:#0f172a}html.light .mini-badge{color:#1d4ed8}html.light .btn-ghost{color:#0f172a}html.light footer{background:rgba(248,250,252,.74)}html.light #product-dock{background:rgba(255,255,255,.65)}html.light #product-dock a{color:#334155}
+html.perf-lite #store-wallpaper video{display:none}html.perf-lite #product-dock{backdrop-filter:none;background:rgba(8,12,22,.85)}
+@media(min-width:768px) and (max-width:1099px){#navbar .island-shell{flex-wrap:nowrap}#navbar .island-links{order:0;flex:1;max-width:520px}}
+@media(max-width:767px){body{padding-top:96px}.product-shell{margin:0 16px;grid-template-columns:minmax(0,1fr)}.product-visual{padding:24px;border-right:0;border-bottom:1px solid var(--glass-border)}.visual-inner{gap:12px}.visual-art{width:104px;height:104px;font-size:40px;border-radius:28px}.visual-caption{max-width:300px}.panel-scroll{padding:24px 20px}.action-bar{padding:20px}.product-name{font-size:28px}.breadcrumb{padding:0 20px;font-size:12px}.related-products{padding:0 16px}.inline-fields{grid-template-columns:minmax(0,1fr)}.action-buttons{flex-direction:column}.service-item{padding:14px}.service-duration,.price-amount{font-size:14px}.product-panel{min-width:0}.cart-section{padding:0 16px}.cart-container,.cart-summary{padding:20px!important}#toast-stack{top:90px}.product-meta{font-size:12px}.product-shell .tabs{gap:12px}.tab-btn{font-size:13px}}
+@media(max-width:359px){#navbar .island-controls .header-cart{display:flex}#navbar .island-controls{gap:0}#navbar .island-controls button,#navbar .island-controls a{width:44px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}#store-wallpaper video{display:none}}
+
+.service-list{grid-template-columns:minmax(0,1fr)}.service-sub{font-size:14px}.status-note{grid-column:1/-1}.tabs{flex-wrap:nowrap;gap:16px}.action-bar{position:relative;bottom:auto}.breadcrumb{max-width:896px}#navbar .island-links{max-height:44px}#product-dock{white-space:nowrap}@media(max-width:767px){.product-shell{margin:0 16px}.tabs{gap:16px}}
+.cart-container{max-width:1060px!important;margin:24px auto 64px!important;padding:0!important;background:none!important;border:0!important;box-shadow:none!important}.cart-content{align-items:start;grid-template-columns:minmax(0,1fr) minmax(0,440px)!important;gap:24px!important}.cart-container>.section-title{font-size:30px;text-align:left;margin-bottom:32px}.cart-container>.section-title::after{left:0;transform:none}.order-summary{padding:24px!important;border-radius:24px!important;background:linear-gradient(135deg,rgba(255,255,255,.085),rgba(255,255,255,.022)),rgba(9,14,26,.74)!important;border:1px solid var(--glass-border)!important;box-shadow:0 8px 32px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.1);position:static!important}.order-summary h3{font-size:22px!important;margin-bottom:24px!important}.cart-item{border-radius:20px!important;padding:24px!important}.coupon-section,.donation-section,.customer-contact-display{margin-top:20px!important;padding:16px!important}.coupon-message:empty{display:none}.coupon-input{display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:8px}.coupon-input input{width:100%;min-width:0}.custom-donation{display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:8px}.custom-donation input{width:100%;min-width:0}.donation-options{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}.donation-option{padding:10px 4px!important;min-height:44px}.summary-total{font-size:24px!important}.qris-payment{border-radius:24px!important}.remove-item{min-height:44px}.item-name{font-size:20px!important}.notification{z-index:110!important;top:90px!important}html.light .order-summary{background:rgba(255,255,255,.8)!important}html.light .coupon-section,html.light .donation-section,html.light .customer-contact-display{color:#0f172a}html.light .order-summary input{background:rgba(148,163,184,.15);color:#0f172a}
+@media(max-width:1100px){.cart-container{margin:24px!important}}@media(max-width:767px){.cart-container{margin:16px!important}.cart-content{grid-template-columns:minmax(0,1fr)!important;gap:24px!important}.cart-container>.section-title{font-size:26px}.order-summary{padding:20px!important}.cart-item{padding:20px!important}.coupon-input{grid-template-columns:minmax(0,1fr)}.coupon-input input,.coupon-input button{width:100%}.summary-total{font-size:22px!important}}
+html.light .text-input::placeholder,html.light input::placeholder{color:#64748b;opacity:1}html.light .product-category,html.light .tab-btn.active,html.light .card-category{color:#1d4ed8}html.light .card-price{color:#92400e}html.light .view-details{color:#1e40af}html.light .service-item,html.light .text-input,html.light #qty{border-color:rgba(15,23,42,.24)}html.light .service-item.active{border-color:#2563eb;background:rgba(59,130,246,.1)}
+.notification{top:90px!important;bottom:auto!important;height:auto!important;pointer-events:none!important;max-width:calc(100vw - 32px);right:16px!important;left:auto!important}.notification:not(.show){visibility:hidden}html{scroll-padding-top:110px}button,input,a{scroll-margin-top:110px;scroll-margin-bottom:100px}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+.donation-option{white-space:nowrap;font-size:14px!important}

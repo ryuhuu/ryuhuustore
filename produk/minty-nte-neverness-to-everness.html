@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<title>Minty-NTE — Neverness to Everness | Ryuhuu Store</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+:root {
+    --ios-bg: #030712;
+    --ios-blue: #0A84FF;
+    --ios-purple: #BF5AF2;
+    --ios-green: #32D74B;
+    --ios-orange: #FF9F0A;
+    --ios-pink: #FF375F;
+    --ios-cyan: #64D2FF;
+
+    --text-primary: rgba(255, 255, 255, 0.95);
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-tertiary: rgba(255, 255, 255, 0.5);
+
+    --glass-border: rgba(255, 255, 255, 0.14);
+    --glass-tint: linear-gradient(135deg, rgba(255, 255, 255, .085), rgba(255, 255, 255, .022));
+    --glass-base: rgba(9, 14, 26, .74);
+    --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, .10);
+    --card-shadow: 0 10px 34px rgba(0, 0, 0, .40);
+    --hover-shadow: 0 18px 44px rgba(0, 0, 0, .52);
+
+    --notif-surface: #1b2438;
+    --notif-border: rgba(255, 255, 255, 0.18);
+    --notif-shadow: 0 2px 8px rgba(0, 0, 0, .5), 0 24px 70px rgba(0, 0, 0, .75);
+    --notif-title: #ffffff;
+    --notif-text: #d7deeb;
+
+    --transition-quick: color .2s ease, background .2s ease, border-color .2s ease;
+    --transition-smooth: transform .25s cubic-bezier(.4,0,.2,1), background .25s ease, border-color .25s ease, box-shadow .25s ease, color .2s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+body {
+    background: var(--ios-bg);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6; letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+
+/* Liquid glass statis — tanpa blur realtime, hemat GPU */
+.glass-panel {
+    position: relative;
+    background: var(--glass-tint), var(--glass-base);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--card-shadow), var(--glass-highlight);
+    overflow: hidden;
+}
+.glass-panel::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(160deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.03) 22%, rgba(255,255,255,0) 46%);
+}
+.glass-panel > * { position: relative; z-index: 1; }
+.glass-blur { backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); }
+
+.bg-gradient {
+    position: fixed; inset: 0; z-index: -2;
+    background:
+        radial-gradient(circle at 18% 20%, rgba(10, 132, 255, .12) 0%, transparent 44%),
+        radial-gradient(circle at 82% 68%, rgba(191, 90, 242, .12) 0%, transparent 44%),
+        var(--ios-bg);
+}
+.glowing-orbs { position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden; }
+.ambient-light { position: absolute; border-radius: 50%; }
+.orb-1 { width: 640px; height: 640px; top: -230px; left: -190px;
+    background: radial-gradient(circle at 50% 50%, rgba(10,132,255,.24), rgba(10,132,255,.07) 45%, rgba(10,132,255,0) 70%); }
+.orb-2 { width: 540px; height: 540px; top: 32%; right: -210px;
+    background: radial-gradient(circle at 50% 50%, rgba(191,90,242,.22), rgba(191,90,242,.06) 45%, rgba(191,90,242,0) 70%); }
+.orb-3 { width: 440px; height: 440px; bottom: -170px; left: 26%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,159,10,.16), rgba(255,159,10,.05) 45%, rgba(255,159,10,0) 70%); }
+
+/* Header */
+header {
+    position: sticky; top: 0; z-index: 100;
+    background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02)), rgba(3, 7, 18, .70);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+nav { max-width: 1140px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 70px; gap: 16px; }
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-primary); font-weight: 800; font-size: 19px; letter-spacing: -.02em; }
+.logo-mark { width: 38px; height: 38px; border-radius: 13px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--ios-blue), var(--ios-purple)); box-shadow: 0 8px 20px rgba(10,132,255,.32), inset 0 1px 0 rgba(255,255,255,.35); overflow: hidden; color: #fff; font-size: 15px; }
+.logo-mark img { width: 100%; height: 100%; object-fit: cover; }
+.nav-links { display: flex; gap: 24px; align-items: center; }
+.nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 600; font-size: 14.5px; transition: var(--transition-quick); padding: 8px 0; position: relative; }
+.nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+.nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; border-radius: 2px; background: linear-gradient(to right, var(--ios-blue), var(--ios-purple)); transition: width .3s ease; }
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.icon-btn {
+    width: 40px; height: 40px; border-radius: 14px; cursor: pointer; flex: none;
+    display: flex; align-items: center; justify-content: center; text-decoration: none;
+    background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+    border: 1px solid var(--glass-border); box-shadow: var(--glass-highlight);
+    color: var(--text-secondary); font-size: 15px; transition: var(--transition-smooth);
+}
+.icon-btn:hover { color: var(--text-primary); background: rgba(255,255,255,.14); transform: translateY(-2px); }
+.cart-icon { position: relative; }
+.cart-count { position: absolute; top: -6px; right: -6px; background: var(--ios-pink); color: #fff; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; font-size: 11px; display: none; align-items: center; justify-content: center; font-weight: 800; box-shadow: 0 4px 12px rgba(255,55,95,.45); }
+
+.breadcrumb { max-width: 1140px; margin: 26px auto 14px; padding: 0 20px; font-size: 13.5px; color: var(--text-tertiary); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--ios-blue); text-decoration: none; font-weight: 600; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb i { font-size: 10px; opacity: .5; }
+
+/* Tombol umum */
+.btn { padding: 14px 22px; border-radius: 15px; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; transition: var(--transition-smooth); border: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; text-decoration: none; }
+.btn-ghost { background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.05)); color: var(--text-primary); border: 1px solid rgba(255,255,255,.18); box-shadow: inset 0 1px 0 rgba(255,255,255,.14); }
+.btn-ghost:hover { background: rgba(255,255,255,.19); transform: translateY(-2px); }
+.btn-primary { background: linear-gradient(135deg, var(--ios-blue), #6f5bff); color: #fff; box-shadow: 0 10px 26px rgba(10,132,255,.34), inset 0 1px 0 rgba(255,255,255,.28); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(10,132,255,.44), inset 0 1px 0 rgba(255,255,255,.28); }
+.btn-danger { background: linear-gradient(135deg, rgba(255,55,95,.22), rgba(255,55,95,.10)); color: #ffb3c4; border: 1px solid rgba(255,55,95,.35); }
+.btn-danger:hover { background: rgba(255,55,95,.28); color: #fff; transform: translateY(-2px); }
+
+/* Input umum */
+.field-label { font-size: 12.5px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; }
+.text-input {
+    width: 100%; padding: 12px 15px; border-radius: 14px; font: inherit; font-size: 14.5px; color: var(--text-primary);
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06); transition: border-color .2s ease, box-shadow .2s ease;
+}
+.text-input::placeholder { color: rgba(255,255,255,.35); }
+.text-input:focus { outline: none; border-color: var(--ios-blue); box-shadow: 0 0 0 3px rgba(10,132,255,.22); }
+.text-input.input-error { border-color: var(--ios-pink); box-shadow: 0 0 0 3px rgba(255,55,95,.22); }
+
+.qty-control { display: flex; align-items: center; gap: 8px; }
+.qty-control input { width: 58px; text-align: center; padding: 9px 4px; border-radius: 12px; font: inherit; font-weight: 800; font-size: 15px; color: var(--text-primary); background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); -moz-appearance: textfield; }
+.qty-control input::-webkit-outer-spin-button, .qty-control input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.qty-btn { width: 38px; height: 38px; border-radius: 12px; }
+
+/* Footer */
+footer { padding: 72px 20px 40px; margin-top: 80px; border-top: 1px solid rgba(255,255,255,.09); background: linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.012)), rgba(3, 7, 18, .84); box-shadow: inset 0 1px 0 rgba(255,255,255,.07); }
+.footer-content { max-width: 1140px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 40px; }
+.footer-section h3 { font-size: 16px; margin-bottom: 18px; padding-bottom: 12px; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,.10); position: relative; }
+.footer-section h3::after { content: ''; position: absolute; left: 0; bottom: -1px; width: 42px; height: 2px; border-radius: 2px; background: linear-gradient(to right, var(--ios-blue), var(--ios-purple)); }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 11px; }
+.footer-links a, .contact-link { color: var(--text-secondary); text-decoration: none; transition: var(--transition-smooth); display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+.footer-links a:hover, .contact-link:hover { color: #7cc0ff; transform: translateX(4px); }
+.footer-links i { width: 16px; text-align: center; opacity: .8; }
+.social-links { display: flex; gap: 10px; margin-top: 20px; }
+.social-link { width: 42px; height: 42px; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.12); box-shadow: inset 0 1px 0 rgba(255,255,255,.10); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: var(--transition-smooth); text-decoration: none; }
+.social-link:hover { background: linear-gradient(135deg, var(--ios-blue), var(--ios-purple)); color: #fff; transform: translateY(-4px); border-color: transparent; box-shadow: 0 10px 26px rgba(10,132,255,.32); }
+.copyright { text-align: center; margin-top: 52px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.09); color: var(--text-tertiary); font-size: 13.5px; }
+
+/* Toast */
+#toast-stack { position: fixed; top: 18px; right: 18px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; width: min(380px, calc(100vw - 36px)); pointer-events: none; }
+.toast { pointer-events: auto; position: relative; overflow: hidden; display: flex; align-items: flex-start; gap: .8rem; padding: 1rem 1.05rem 1rem 1.2rem; border-radius: 16px; background: var(--notif-surface); border: 1px solid var(--notif-border); box-shadow: var(--notif-shadow); opacity: 0; transform: translateY(-10px) scale(.98); transition: opacity .22s ease, transform .22s ease; }
+.toast::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--toast-accent, #3b82f6); }
+.toast.toast-in { opacity: 1; transform: translateY(0) scale(1); }
+.toast.toast-out { opacity: 0; transform: translateY(-8px) scale(.98); }
+.toast.t-info { --toast-accent: #3b82f6; border-color: rgba(59,130,246,.45); }
+.toast.t-success { --toast-accent: #10b981; border-color: rgba(16,185,129,.45); }
+.toast.t-warning { --toast-accent: #f59e0b; border-color: rgba(245,158,11,.45); }
+.toast.t-error { --toast-accent: #ef4444; border-color: rgba(239,68,68,.45); }
+.toast-icon { flex: none; width: 36px; height: 36px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.tone-info { background: rgba(59,130,246,.22); color: #60a5fa; }
+.tone-success { background: rgba(16,185,129,.22); color: #34d399; }
+.tone-warning { background: rgba(245,158,11,.22); color: #fbbf24; }
+.tone-error { background: rgba(239,68,68,.22); color: #f87171; }
+.toast-content { flex: 1; min-width: 0; }
+.toast-title { font-size: 15px; font-weight: 800; color: var(--notif-title); line-height: 1.3; }
+.toast-body { font-size: 13.5px; color: var(--notif-text); margin-top: 3px; line-height: 1.5; }
+.toast-close { flex: none; width: 28px; height: 28px; border-radius: 9px; border: none; cursor: pointer; background: rgba(127,127,127,.14); color: var(--notif-text); font-size: 12px; display: flex; align-items: center; justify-content: center; transition: background .2s ease; }
+.toast-close:hover { background: rgba(127,127,127,.26); }
+
+@media (max-width: 768px) {
+    .nav-links { display: none; }
+    #toast-stack { top: 12px; right: 12px; left: 12px; width: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+.product-shell { max-width: 1140px; margin: 0 auto; border-radius: 28px; display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); align-items: stretch; min-height: 700px; }
+.product-visual { position: relative; display: flex; align-items: center; justify-content: center; padding: 40px; border-right: 1px solid rgba(255, 255, 255, .09); }
+.visual-inner { display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; }
+.visual-art { width: 190px; height: 190px; border-radius: 46px; display: flex; align-items: center; justify-content: center; font-size: 66px; color: rgba(255,255,255,.92); border: 1px solid rgba(255,255,255,.16); box-shadow: 0 24px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.24); }
+.visual-caption { font-size: 13px; color: var(--text-tertiary); max-width: 250px; line-height: 1.6; }
+.visual-badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.mini-badge { font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px; color: #cfe3ff; background: rgba(10,132,255,.16); border: 1px solid rgba(10,132,255,.28); }
+.product-panel { position: relative; display: flex; flex-direction: column; min-width: 0; }
+.panel-scroll { padding: 34px 34px 20px; }
+.panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.close-btn { width: 38px; height: 38px; border-radius: 50%; flex: none; }
+.product-category { display: block; color: #4da3ff; font-size: 12.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .10em; margin-bottom: 6px; }
+.product-name { font-size: 38px; font-weight: 800; letter-spacing: -.035em; line-height: 1.08; margin-bottom: 8px; }
+.product-meta { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; font-size: 14.5px; color: var(--text-secondary); }
+.product-meta span { display: inline-flex; align-items: center; gap: 7px; }
+.status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ios-green); box-shadow: 0 0 10px var(--ios-green); }
+.meta-star { color: var(--ios-orange); }
+.panel-divider { height: 1px; background: rgba(255,255,255,.09); margin: 22px 0; }
+.section-label { font-size: 14.5px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+.service-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.service-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; background: linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.02)); border-radius: 16px; border: 1px solid rgba(255,255,255,.10); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); transition: var(--transition-smooth); cursor: pointer; position: relative; }
+.service-item:hover { border-color: rgba(10,132,255,.55); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.10); }
+.service-item.active { border-color: rgba(10,132,255,.85); background: linear-gradient(135deg, rgba(10,132,255,.24), rgba(10,132,255,.07)); box-shadow: 0 10px 26px rgba(10,132,255,.20), inset 0 1px 0 rgba(255,255,255,.16); }
+.service-item.best-value { border-color: rgba(255,159,10,.50); background: linear-gradient(135deg, rgba(255,159,10,.16), rgba(255,159,10,.035)); }
+.service-item.best-value.active { border-color: rgba(255,159,10,.9); box-shadow: 0 10px 26px rgba(255,159,10,.20), inset 0 1px 0 rgba(255,255,255,.16); }
+.service-duration { font-weight: 700; font-size: 15.5px; }
+.service-sub { font-size: 11.5px; color: var(--text-tertiary); }
+.price-amount { font-weight: 700; font-size: 15px; white-space: nowrap; }
+.best-tag { position: absolute; top: -9px; left: 16px; background: var(--ios-orange); color: #1c1200; font-size: 9.5px; font-weight: 800; letter-spacing: .08em; padding: 2px 9px; border-radius: 999px; }
+.inline-fields { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: end; margin-top: 18px; }
+.tabs { display: flex; gap: 24px; border-bottom: 1px solid rgba(255,255,255,.10); flex-wrap: wrap; margin-bottom: 20px; }
+.tab-btn { background: none; border: none; color: var(--text-tertiary); font: inherit; font-size: 14.5px; font-weight: 600; padding: 0 2px 12px; cursor: pointer; position: relative; transition: color .2s ease; }
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active { color: #4da3ff; }
+.tab-btn::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; border-radius: 2px; background: #4da3ff; opacity: 0; transition: opacity .2s ease; }
+.tab-btn.active::after { opacity: 1; }
+.tab-panel { display: none; font-size: 14.5px; color: var(--text-secondary); line-height: 1.75; }
+.tab-panel.active { display: block; }
+.tab-panel strong { color: var(--text-primary); font-weight: 700; }
+.tab-panel > p { margin-bottom: 14px; }
+.info-list { list-style: disc; padding-left: 20px; display: grid; gap: 8px; }
+.info-list li { font-size: 14px; }
+.feature-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.feature-list li { background: linear-gradient(135deg, rgba(255,255,255,.065), rgba(255,255,255,.015)); padding: 10px 12px 10px 32px; border-radius: 12px; font-size: 13px; color: var(--text-secondary); border: 1px solid rgba(255,255,255,.07); box-shadow: inset 0 1px 0 rgba(255,255,255,.06); position: relative; }
+.feature-list li::before { content: '\2713'; position: absolute; left: 12px; top: 10px; color: var(--ios-green); font-weight: 800; font-size: 12px; }
+.action-bar { position: sticky; bottom: 0; margin-top: auto; padding: 18px 34px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; background: linear-gradient(135deg, rgba(255,255,255,.05), rgba(255,255,255,.015)), rgba(7, 11, 22, .95); border-top: 1px solid rgba(255,255,255,.10); }
+.selected-label { font-size: 12.5px; font-weight: 600; color: var(--text-tertiary); }
+.selected-value { font-size: 20px; font-weight: 800; letter-spacing: -.025em; }
+.action-buttons { display: flex; gap: 10px; }
+.related-products { max-width: 1140px; margin: 80px auto; padding: 0 20px; }
+.section-title { text-align: center; font-size: 30px; font-weight: 800; letter-spacing: -.03em; margin-bottom: 46px; position: relative; }
+.section-title::after { content: ''; position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); width: 64px; height: 3px; background: linear-gradient(to right, var(--ios-blue), var(--ios-purple)); border-radius: 2px; }
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.product-card { border-radius: 22px; display: flex; flex-direction: column; text-decoration: none; color: inherit; transition: var(--transition-smooth); content-visibility: auto; contain-intrinsic-size: 320px; }
+.product-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,.22); box-shadow: var(--hover-shadow), var(--glass-highlight); }
+.card-image { height: 132px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: rgba(255,255,255,.9); position: relative; }
+.card-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(3,7,18,.35)); }
+.card-info { padding: 18px; flex-grow: 1; display: flex; flex-direction: column; }
+.card-category { color: #7cc0ff; font-size: 10.5px; font-weight: 800; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .12em; }
+.card-name { font-size: 17px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 6px; }
+.card-price { font-size: 15.5px; font-weight: 800; margin-bottom: 14px; color: #ffd08a; }
+.view-details { margin-top: auto; text-align: center; padding: 11px; background: linear-gradient(135deg, rgba(10,132,255,.22), rgba(191,90,242,.12)); color: #cfe3ff; border: 1px solid rgba(10,132,255,.30); border-radius: 13px; font-weight: 700; font-size: 12.5px; text-decoration: none; transition: var(--transition-smooth); }
+.view-details:hover { background: rgba(10,132,255,.32); transform: translateY(-2px); color: #fff; }
+@media (max-width: 960px) {
+    .product-shell { grid-template-columns: 1fr; min-height: 0; }
+    .product-visual { border-right: none; border-bottom: 1px solid rgba(255,255,255,.09); padding: 32px 24px; }
+    .visual-art { width: 150px; height: 150px; border-radius: 38px; font-size: 54px; }
+    .panel-scroll { padding: 26px 24px 16px; }
+    .action-bar { padding: 16px 24px; }
+}
+@media (max-width: 768px) {
+    .product-name { font-size: 30px; }
+    .service-list { grid-template-columns: 1fr; }
+    .inline-fields { grid-template-columns: 1fr; align-items: stretch; }
+    .feature-list { grid-template-columns: 1fr; }
+    .action-bar { flex-direction: column; align-items: stretch; }
+    .action-buttons { justify-content: stretch; }
+    .action-buttons .btn { flex: 1; }
+    .products-grid { grid-template-columns: 1fr; }
+    .section-title { font-size: 26px; }
+}
+</style>
+<link href="../assets/product-theme.css" rel="stylesheet"/></head>
+<body><div aria-hidden="true" id="store-wallpaper"><img alt="" src="../assets/ryo-poster.jpg"/><video data-src="../assets/ryo-wallpaper.mp4" loop="" muted="" playsinline="" poster="../assets/ryo-poster.jpg" preload="none" tabindex="-1"></video></div>
+<nav aria-label="Navigasi atas" id="navbar"><div class="island-shell"><a class="island-brand" href="../index.html"><span class="island-logo">R</span><span class="island-name">Ryuhuu Store</span></a><div class="island-links" id="island-links"><a href="../index.html">Store</a><a href="../index.html#games">Games</a><a href="../index.html#faq">FAQ</a><a href="https://discord.gg/r3G3jHdQwv" rel="noopener noreferrer" target="_blank"><i class="fab fa-discord"></i> Community</a></div><div class="island-controls" id="island-controls"><button aria-label="Mode hemat GPU" id="perf-button" title="Mode hemat GPU"><i class="fas fa-bolt"></i></button><button aria-label="Ganti tema" id="theme-button" title="Ganti tema"><i class="fas fa-circle-half-stroke"></i></button><a aria-label="Keranjang" class="header-cart" href="../keranjang.html"><i class="fas fa-shopping-bag"></i><span class="cart-count">0</span></a></div><button aria-controls="island-links island-controls" aria-expanded="true" aria-label="Kecilkan menu atas" class="island-toggle" id="island-toggle"><i class="fas fa-chevron-up"></i></button></div></nav>
+<div class="bg-gradient"></div>
+<div class="glowing-orbs">
+<div class="ambient-light orb-1"></div>
+<div class="ambient-light orb-2"></div>
+<div class="ambient-light orb-3"></div>
+</div>
+<div class="breadcrumb">
+<a href="../index.html">Beranda</a> <i class="fas fa-chevron-right"></i>
+<a href="../index.html#produk">Produk</a> <i class="fas fa-chevron-right"></i>
+<span>Minty-NTE</span>
+</div>
+<section class="product-shell glass-panel">
+<div class="product-visual" style="background:radial-gradient(circle at 50% 38%,#10b98144,transparent 65%),rgba(6,10,20,.3)">
+<div class="visual-inner">
+<div class="visual-art" style="background:linear-gradient(135deg,#10b981,#0d9488)"><i class="fas fa-gamepad"></i></div>
+<div class="visual-badges"><span class="mini-badge">Quality</span></div>
+<p class="visual-caption">Minty-NTE untuk Neverness to Everness. Pilih paket, lalu lanjutkan ke keranjang.</p>
+</div>
+</div>
+<div class="product-panel">
+<div class="panel-scroll">
+<div class="panel-head">
+<div>
+<span class="product-category">Neverness to Everness</span>
+<h1 class="product-name">Minty-NTE</h1>
+<div class="product-meta"><span><i class="status-dot"></i> Available</span></div>
+</div>
+<a class="icon-btn close-btn" href="../index.html#produk" title="Kembali ke daftar produk"><i class="fas fa-times"></i></a>
+</div>
+<div class="panel-divider"></div>
+<div class="section-label">Pilih Paket</div>
+<div class="service-list"><button class="service-item active" data-price="40000" data-tier="3 Days" data-tier-id="3_days_1" type="button"><span><span class="service-duration" style="display:block">3 Days</span><span class="service-sub">$2 USD</span></span><span class="price-amount">Rp 40.000</span></button><button class="service-item" data-price="120000" data-tier="7 Days" data-tier-id="7_days_2" type="button"><span><span class="service-duration" style="display:block">7 Days</span><span class="service-sub">$6 USD</span></span><span class="price-amount">Rp 120.000</span></button><button class="service-item" data-price="240000" data-tier="30 Days" data-tier-id="30_days_3" type="button"><span><span class="service-duration" style="display:block">30 Days</span><span class="service-sub">$12 USD</span></span><span class="price-amount">Rp 240.000</span></button></div>
+<div class="inline-fields">
+<div>
+<span class="field-label">Jumlah</span>
+<div class="qty-control">
+<button aria-label="Kurangi jumlah" class="icon-btn qty-btn" id="qty-minus" type="button"><i class="fas fa-minus"></i></button>
+<input aria-label="Jumlah" id="qty" max="99" min="1" type="number" value="1"/>
+<button aria-label="Tambah jumlah" class="icon-btn qty-btn" id="qty-plus" type="button"><i class="fas fa-plus"></i></button>
+</div>
+</div>
+<div>
+<label class="field-label" for="contact">Nickname Discord / Nomor WhatsApp</label>
+<input class="text-input" id="contact" placeholder="Contoh: ryuhuu. atau 08123456789" type="text"/>
+</div>
+</div>
+<div class="panel-divider"></div>
+<div class="tabs">
+<button class="tab-btn active" data-tab="info">Informasi Produk</button>
+<button class="tab-btn" data-tab="fitur">Fitur</button>
+<button class="tab-btn" data-tab="panduan">Panduan Order</button>
+<button class="tab-btn" data-tab="dukungan">Dukungan</button>
+</div>
+<div class="tab-panel active" id="info"><p><strong>Minty-NTE</strong> untuk <strong>Neverness to Everness</strong>. Pilih durasi dan periksa harga sebelum checkout.</p><ul class="info-list"><li>Harga IDR dan USD ditampilkan per paket. Konfirmasikan metode pembayaran ke admin.</li><li>Lisensi diproses setelah pembayaran dikonfirmasi admin.</li><li>Isi kontak aktif agar admin bisa menghubungi kamu.</li></ul></div>
+<div class="tab-panel" id="fitur"><p>Tag produk: Quality.</p><p style="margin-top:12px">Konfirmasi fitur, kompatibilitas, dan panduan aktivasi terbaru ke admin sebelum membeli.</p></div>
+<div class="tab-panel" id="panduan">
+<p>Ikuti langkah berikut agar pesanan cepat diproses:</p>
+<ul class="info-list">
+<li>Pilih paket dan atur jumlahnya.</li>
+<li>Isi nickname Discord atau nomor WhatsApp yang aktif.</li>
+<li>Klik <strong>Tambah ke Keranjang</strong> atau <strong>Checkout</strong>.</li>
+<li>Selesaikan pembayaran di halaman keranjang, lalu kirim bukti ke admin.</li>
+<li>Key dan panduan pemakaian dikirim setelah pembayaran diverifikasi.</li>
+</ul>
+</div>
+<div class="tab-panel" id="dukungan">
+<p>Butuh bantuan? Tim kami siap membantu setiap hari:</p>
+<ul class="info-list">
+<li>WhatsApp: <strong>+62 851-1706-5033</strong></li>
+<li>Discord: <strong>ryuhuu.</strong></li>
+<li>Telegram: <strong>@ryuhuuz</strong></li>
+<li>Email: <strong>ryuhuustore@gmail.com</strong></li>
+</ul>
+<p style="margin-top: 14px;">Sertakan Order ID saat menghubungi admin agar pengecekan lebih cepat.</p>
+</div>
+</div>
+<div class="action-bar">
+<div>
+<div class="selected-label">Paket Terpilih</div>
+<div class="selected-value" id="selected-value">3 Days — Rp 40.000</div>
+</div>
+<div class="action-buttons">
+<button class="btn btn-ghost" id="cartButton" type="button"><i class="fas fa-cart-plus"></i> Tambah ke Keranjang</button>
+<button class="btn btn-primary" id="checkoutButton" type="button"><i class="fas fa-bolt"></i> Checkout</button>
+</div>
+</div>
+</div>
+</section>
+<section class="related-products">
+<h2 class="section-title">Produk Lainnya</h2>
+<div class="products-grid"><article class="product-card glass-panel"><div class="card-image" style="background:linear-gradient(135deg,#818cf8,#a855f7)"><i class="fas fa-gamepad"></i></div><div class="card-info"><span class="card-category">Neverness to Everness</span><h3 class="card-name">Kinu</h3><div class="card-price">Mulai Rp 40.000</div><a class="view-details" href="kinu-neverness-to-everness.html">Lihat Detail →</a></div></article><article class="product-card glass-panel"><div class="card-image" style="background:linear-gradient(135deg,#9333ea,#4338ca)"><i class="fas fa-gamepad"></i></div><div class="card-info"><span class="card-category">Neverness to Everness</span><h3 class="card-name">Lumen-NTE</h3><div class="card-price">Mulai Rp 98.400</div><a class="view-details" href="lumen-nte-neverness-to-everness.html">Lihat Detail →</a></div></article><article class="product-card glass-panel"><div class="card-image" style="background:linear-gradient(135deg,#2563eb,#06b6d4)"><i class="fas fa-gamepad"></i></div><div class="card-info"><span class="card-category">Neverness to Everness</span><h3 class="card-name">Slash-NTE</h3><div class="card-price">Mulai Rp 40.000</div><a class="view-details" href="slash-nte-neverness-to-everness.html">Lihat Detail →</a></div></article></div>
+</section>
+<footer id="kontak">
+<div class="footer-content">
+<div class="footer-section">
+<h3>Ryuhuustore</h3>
+<p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.7; margin-bottom: 18px;">Toko digital terpercaya dengan pelayanan terbaik dan harga kompetitif. Kami berkomitmen memberikan pengalaman berbelanja terbaik untuk para gamer.</p>
+<div class="social-links">
+<a class="social-link" href="https://wa.me/6285117065033" rel="noopener noreferrer" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+<a class="social-link" href="https://discord.com/users/1120396377839648780" rel="noopener noreferrer" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+<a class="social-link" href="https://t.me/ryuhuuz" rel="noopener noreferrer" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+<a class="social-link" href="mailto:ryuhuustore@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+</div>
+</div>
+<div class="footer-section">
+<h3>Navigasi</h3>
+<ul class="footer-links">
+<li><a href="../index.html"><i class="fas fa-house"></i> Beranda</a></li>
+<li><a href="../index.html#produk"><i class="fas fa-gamepad"></i> Semua Produk</a></li>
+<li><a href="../keranjang.html"><i class="fas fa-shopping-bag"></i> Keranjang</a></li>
+<li><a href="../index.html#cara-order"><i class="fas fa-list-check"></i> Cara Order</a></li>
+</ul>
+</div>
+<div class="footer-section">
+<h3>Bantuan</h3>
+<ul class="footer-links">
+<li><a href="../index.html#cara-order"><i class="fas fa-shopping-cart"></i> Cara Pembelian</a></li>
+<li><a href="../index.html#faq"><i class="fas fa-question-circle"></i> FAQ</a></li>
+<li><a href="https://wa.me/6285117065033" rel="noopener noreferrer" target="_blank"><i class="fas fa-headset"></i> Hubungi Admin</a></li>
+</ul>
+</div>
+<div class="footer-section">
+<h3>Kontak</h3>
+<ul class="footer-links">
+<li><a class="contact-link" href="mailto:ryuhuustore@gmail.com"><i class="fas fa-envelope"></i> ryuhuustore@gmail.com</a></li>
+<li><a class="contact-link" href="https://wa.me/6285117065033" rel="noopener noreferrer" target="_blank"><i class="fab fa-whatsapp"></i> +62 851-1706-5033</a></li>
+<li><a class="contact-link" href="https://t.me/ryuhuuz" rel="noopener noreferrer" target="_blank"><i class="fab fa-telegram"></i> @ryuhuuz</a></li>
+<li><a class="contact-link" href="https://discord.com/users/1120396377839648780" rel="noopener noreferrer" target="_blank"><i class="fab fa-discord"></i> ryuhuu.</a></li>
+</ul>
+</div>
+</div>
+<div class="copyright">© 2026 Ryuhuustore. All rights reserved.</div>
+</footer>
+<div aria-live="polite" id="toast-stack"></div>
+<script>
+
+// ============ NOTIFIKASI ============
+const TONE_ICONS = { info: 'fa-circle-info', success: 'fa-circle-check', warning: 'fa-triangle-exclamation', error: 'fa-circle-exclamation' };
+function notify(options) {
+    const opts = options || {};
+    const tone = opts.tone || 'info';
+    const duration = typeof opts.duration === 'number' ? opts.duration : 4500;
+    const stack = document.getElementById('toast-stack');
+    if (!stack) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast t-' + tone;
+    toast.innerHTML = '<div class="toast-icon tone-' + tone + '"><i class="fas ' + (TONE_ICONS[tone] || TONE_ICONS.info) + '"></i></div>'
+        + '<div class="toast-content"><div class="toast-title"></div>' + (opts.message ? '<div class="toast-body"></div>' : '') + '</div>'
+        + '<button type="button" class="toast-close" aria-label="Tutup"><i class="fas fa-times"></i></button>';
+    toast.querySelector('.toast-title').textContent = opts.title || '';
+    if (opts.message) toast.querySelector('.toast-body').textContent = opts.message;
+    const remove = function () {
+        toast.classList.remove('toast-in'); toast.classList.add('toast-out');
+        setTimeout(function () { toast.remove(); }, 240);
+    };
+    toast.querySelector('.toast-close').addEventListener('click', remove);
+    stack.appendChild(toast);
+    requestAnimationFrame(function () { toast.classList.add('toast-in'); });
+    if (duration > 0) setTimeout(remove, duration);
+}
+
+// ============ KERANJANG (tahan banting) ============
+const CART_KEY = 'cart';
+let memoryCart = null;
+
+const HAS_STORAGE = (function () {
+    try {
+        const k = '__ryuhuu_test__';
+        window.localStorage.setItem(k, '1');
+        window.localStorage.removeItem(k);
+        return true;
+    } catch (e) { return false; }
+})();
+
+function encodeCart(cart) {
+    try { return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(cart))))); }
+    catch (e) { return ''; }
+}
+function decodeCart(str) {
+    try {
+        const parsed = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(str)))));
+        return Array.isArray(parsed) ? parsed : null;
+    } catch (e) { return null; }
+}
+function cartFromUrl() {
+    const src = window.location.hash + '&' + window.location.search;
+    const m = src.match(/cart=([^&]+)/);
+    return m ? decodeCart(m[1]) : null;
+}
+
+function getCart() {
+    if (HAS_STORAGE) {
+        try {
+            const raw = window.localStorage.getItem(CART_KEY);
+            const parsed = raw ? JSON.parse(raw) : [];
+            if (Array.isArray(parsed)) return parsed;
+        } catch (e) { console.warn('Keranjang tidak terbaca:', e); }
+    }
+    if (memoryCart) return memoryCart;
+    const fromUrl = cartFromUrl();
+    if (fromUrl) { memoryCart = fromUrl; return fromUrl; }
+    return [];
+}
+
+function saveCart(cart) {
+    memoryCart = cart;
+    if (HAS_STORAGE) {
+        try { window.localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+        catch (e) { console.warn('Keranjang hanya disimpan sementara:', e); }
+    }
+    return true;
+}
+
+// Saat dibuka lewat file:// sebagian browser memblokir localStorage,
+// jadi isi keranjang ikut dibawa lewat URL antar halaman.
+function cartLink(base) {
+    if (HAS_STORAGE) return base;
+    const cart = getCart();
+    if (!cart.length) return base;
+    const payload = encodeCart(cart);
+    return payload ? base + '#cart=' + payload : base;
+}
+function syncCartLinks() {
+    if (HAS_STORAGE) return;
+    document.querySelectorAll('a[href*="keranjang.html"]').forEach(function (a) {
+        const base = a.getAttribute('href').split('#')[0];
+        a.setAttribute('href', cartLink(base));
+    });
+}
+function adoptCartFromUrl() {
+    const fromUrl = cartFromUrl();
+    if (!fromUrl || !fromUrl.length) return false;
+    const current = getCart();
+    if (current.length) return false;
+    saveCart(fromUrl);
+    return true;
+}
+
+function cartTotalQty() { return getCart().reduce(function (s, i) { return s + (Number(i && i.qty) || 1); }, 0); }
+function cartSubtotal() { return getCart().reduce(function (s, i) { return s + (Number(i.price) || 0) * (Number(i.qty) || 1); }, 0); }
+function updateCartCount() {
+    const total = cartTotalQty();
+    document.querySelectorAll('.cart-count').forEach(function (el) {
+        el.textContent = total;
+        el.style.display = total > 0 ? 'flex' : 'none';
+    });
+    syncCartLinks();
+}
+function formatIDR(value) { return 'Rp ' + Number(value || 0).toLocaleString('id-ID'); }
+
+// ============ KODE ORDER ============
+function productCodeOf(name) {
+    return String(name || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8) || 'ITEM';
+}
+function tierCodeOf(tier) {
+    const t = String(tier || '').toUpperCase();
+    if (t.indexOf('LIFETIME') >= 0) return 'LIFE';
+    if (t.indexOf('INVITE') >= 0) return 'INVITE';
+    if (t.indexOf('ADMIN') >= 0 || t.indexOf('HUBUNGI') >= 0) return 'DM';
+    const m = t.match(/(\d+)\s*(HARI|DAY|DAYS|MINGGU|WEEK|BULAN|MONTH|TAHUN|YEAR)/);
+    if (!m) return t.replace(/[^A-Z0-9]/g, '').slice(0, 6) || 'STD';
+    const unit = { HARI: 'D', DAY: 'D', DAYS: 'D', MINGGU: 'W', WEEK: 'W', BULAN: 'M', MONTH: 'M', TAHUN: 'Y', YEAR: 'Y' }[m[2]] || '';
+    return m[1] + unit;
+}
+function cartCodeSummary(cart) {
+    const codes = cart.map(function (i) {
+        const base = productCodeOf(i.product) + tierCodeOf(i.tier);
+        const qty = Number(i.qty) || 1;
+        return qty > 1 ? base + 'X' + qty : base;
+    });
+    let out = codes.join('_');
+    if (out.length > 64) {
+        let kept = [], len = 0, rest = 0;
+        codes.forEach(function (c) {
+            if (len + c.length + 1 <= 58) { kept.push(c); len += c.length + 1; } else { rest++; }
+        });
+        out = kept.join('_') + (rest ? '_P' + rest : '');
+    }
+    return out || 'ORDER';
+}
+function createOrderId(cart) {
+    const d = new Date();
+    const ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+    let rand = '';
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    for (let i = 0; i < 4; i++) rand += chars[Math.floor(Math.random() * chars.length)];
+    return 'RYH-' + ymd + '-' + cartCodeSummary(cart) + '-' + rand;
+}
+
+const PRODUCT_NAME = "Minty-NTE";
+const PRODUCT_GAME = "Neverness to Everness";
+
+document.addEventListener('DOMContentLoaded', function () {
+    const serviceItems = document.querySelectorAll('.service-item');
+    const selectedValue = document.getElementById('selected-value');
+    const contactInput = document.getElementById('contact');
+    const qtyInput = document.getElementById('qty');
+
+    if (!serviceItems.length) {
+        document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab-btn,.tab-panel').forEach(el=>el.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab)?.classList.add('active')}));
+        updateCartCount(); return;
+    }
+    let selectedTier = serviceItems[0].getAttribute('data-tier');
+    let selectedPrice = parseInt(serviceItems[0].getAttribute('data-price'), 10) || 0;
+
+    const getQty = function () { return Math.min(99, Math.max(1, parseInt(qtyInput.value, 10) || 1)); };
+
+    function updateSelection() {
+        const qty = getQty();
+        qtyInput.value = qty;
+        const total = selectedPrice * qty;
+        const priceTxt = selectedPrice ? formatIDR(total) : 'Hubungi Admin';
+        selectedValue.textContent = qty > 1 ? selectedTier + ' × ' + qty + ' — ' + priceTxt : selectedTier + ' — ' + priceTxt;
+    }
+
+    serviceItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+            selectedTier = this.getAttribute('data-tier');
+            selectedPrice = parseInt(this.getAttribute('data-price'), 10) || 0;
+            serviceItems.forEach(function (el) { el.classList.remove('active'); });
+            this.classList.add('active');
+            updateSelection();
+        });
+    });
+
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    tabButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            tabButtons.forEach(function (b) { b.classList.remove('active'); });
+            tabPanels.forEach(function (p) { p.classList.remove('active'); });
+            this.classList.add('active');
+            const panel = document.getElementById(this.getAttribute('data-tab'));
+            if (panel) panel.classList.add('active');
+        });
+    });
+
+    document.getElementById('qty-minus').addEventListener('click', function () { qtyInput.value = getQty() - 1; updateSelection(); });
+    document.getElementById('qty-plus').addEventListener('click', function () { qtyInput.value = getQty() + 1; updateSelection(); });
+    qtyInput.addEventListener('input', updateSelection);
+
+    function addToCart() {
+        const contact = contactInput.value.trim();
+        if (!contact) {
+            contactInput.classList.add('input-error');
+            contactInput.focus();
+            notify({ tone: 'warning', title: 'Kontak belum diisi', message: 'Masukkan nickname Discord atau nomor WhatsApp agar admin bisa mengirim key kamu.' });
+            return false;
+        }
+        contactInput.classList.remove('input-error');
+
+        const qty = getQty();
+        const cart = getCart();
+        const existing = cart.find(function (i) {
+            return i && i.product === PRODUCT_NAME && i.game === PRODUCT_GAME && i.tier === selectedTier && i.contact === contact;
+        });
+        if (existing) {
+            existing.qty = (Number(existing.qty) || 1) + qty;
+        } else {
+            cart.push({
+                id: 'item-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+                product: PRODUCT_NAME,
+                game: PRODUCT_GAME,
+                tier: selectedTier,
+                price: selectedPrice,
+                qty: qty,
+                contact: contact
+            });
+        }
+        if (!saveCart(cart)) return false;
+        updateCartCount();
+        return true;
+    }
+
+    document.getElementById('cartButton').addEventListener('click', function () {
+        const qty = getQty();
+        if (addToCart()) {
+            notify({ tone: 'success', title: 'Ditambahkan ke keranjang',
+                message: PRODUCT_NAME + ' ' + selectedTier + ' × ' + qty + (selectedPrice ? ' — total ' + formatIDR(selectedPrice * qty) : ' — harga via admin') });
+            contactInput.value = '';
+        }
+    });
+
+    document.getElementById('checkoutButton').addEventListener('click', function () {
+        if (addToCart()) {
+            notify({ tone: 'success', title: 'Menuju keranjang', message: 'Item ditambahkan. Mengarahkan ke halaman keranjang...', duration: 2200 });
+            contactInput.value = '';
+            setTimeout(function () { window.location.href = cartLink('../keranjang.html'); }, 1100);
+        }
+    });
+
+    updateCartCount();
+    updateSelection();
+});
+</script>
+<nav aria-label="Navigasi cepat" id="product-dock"><a href="../index.html"><i class="fas fa-house"></i>Store</a><a href="../keranjang.html"><i class="fas fa-shopping-bag"></i>Cart</a><a href="https://wa.me/6285117065033" rel="noopener noreferrer" target="_blank"><i class="fas fa-headset"></i>Admin</a></nav><script src="../assets/product-theme.js"></script></body>
+</html>
