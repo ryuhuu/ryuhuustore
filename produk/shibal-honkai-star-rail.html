@@ -263,7 +263,7 @@ footer { padding: 72px 20px 40px; margin-top: 80px; border-top: 1px solid rgba(2
     .section-title { font-size: 26px; }
 }
 </style>
-<link href="../assets/product-theme.css" rel="stylesheet"/></head>
+<link href="../assets/product-theme.css" rel="stylesheet"/><link href="../assets/product-dock.css" rel="stylesheet"/></head>
 <body><div aria-hidden="true" id="store-wallpaper"><img alt="" src="../assets/ryo-poster.jpg"/><video data-src="../assets/ryo-wallpaper.mp4" loop="" muted="" playsinline="" poster="../assets/ryo-poster.jpg" preload="none" tabindex="-1"></video></div>
 <nav aria-label="Navigasi atas" id="navbar"><div class="island-shell"><a class="island-brand" href="../index.html"><span class="island-logo">R</span><span class="island-name">Ryuhuu Store</span></a><div class="island-links" id="island-links"><a href="../index.html">Store</a><a href="../index.html#games">Games</a><a href="../index.html#faq">FAQ</a><a href="https://discord.gg/r3G3jHdQwv" rel="noopener noreferrer" target="_blank"><i class="fab fa-discord"></i> Community</a></div><div class="island-controls" id="island-controls"><button aria-label="Mode hemat GPU" id="perf-button" title="Mode hemat GPU"><i class="fas fa-bolt"></i></button><button aria-label="Ganti tema" id="theme-button" title="Ganti tema"><i class="fas fa-circle-half-stroke"></i></button><a aria-label="Keranjang" class="header-cart" href="../keranjang.html"><i class="fas fa-shopping-bag"></i><span class="cart-count">0</span></a></div><button aria-controls="island-links island-controls" aria-expanded="true" aria-label="Kecilkan menu atas" class="island-toggle" id="island-toggle"><i class="fas fa-chevron-up"></i></button></div></nav>
 <div class="bg-gradient"></div>
@@ -281,8 +281,10 @@ footer { padding: 72px 20px 40px; margin-top: 80px; border-top: 1px solid rgba(2
 <div class="product-visual" style="background:radial-gradient(circle at 50% 38%,#f59e0b44,transparent 65%),rgba(6,10,20,.3)">
 <div class="visual-inner">
 <div class="visual-art" style="background:linear-gradient(135deg,#f59e0b,#ca8a04)"><i class="fas fa-gamepad"></i></div>
-<div class="visual-badges"><span class="mini-badge">Balanced</span></div>
-<p class="visual-caption">Shibal untuk Honkai Star Rail. Pilih paket, lalu lanjutkan ke keranjang.</p>
+<div class="visual-badges">
+<span class="mini-badge">Balanced</span>
+</div>
+<p class="visual-caption">Lisensi resmi Shibal untuk Honkai Star Rail, dikirim setelah pembayaran diverifikasi admin.</p>
 </div>
 </div>
 <div class="product-panel">
@@ -319,8 +321,26 @@ footer { padding: 72px 20px 40px; margin-top: 80px; border-top: 1px solid rgba(2
 <button class="tab-btn" data-tab="panduan">Panduan Order</button>
 <button class="tab-btn" data-tab="dukungan">Dukungan</button>
 </div>
-<div class="tab-panel active" id="info"><p><strong>Shibal</strong> untuk <strong>Honkai Star Rail</strong>. Pilih durasi dan periksa harga sebelum checkout.</p><ul class="info-list"><li>Harga IDR dan USD ditampilkan per paket. Konfirmasikan metode pembayaran ke admin.</li><li>Lisensi diproses setelah pembayaran dikonfirmasi admin.</li><li>Isi kontak aktif agar admin bisa menghubungi kamu.</li></ul></div>
-<div class="tab-panel" id="fitur"><p>Tag produk: Balanced.</p><p style="margin-top:12px">Konfirmasi fitur, kompatibilitas, dan panduan aktivasi terbaru ke admin sebelum membeli.</p></div>
+<div class="tab-panel active" id="info">
+<p><strong>Shibal</strong> tersedia untuk <strong>Honkai Star Rail</strong> dalam beberapa pilihan durasi. Pastikan memilih durasi yang sesuai sebelum melanjutkan checkout.</p>
+<ul class="info-list">
+<li>Lisensi dikirim setelah pembayaran dikonfirmasi.</li>
+<li>Proses aktivasi dibantu oleh admin.</li>
+<li>Harga mengikuti region pembayaran yang dipilih.</li>
+<li>Ketersediaan produk dapat berubah sewaktu-waktu.</li>
+</ul>
+</div>
+<div class="tab-panel" id="fitur"><div class="original-features">
+<ul class="feature-list">
+<li>Kompatibel dengan versi terbaru Honkai Star Rail</li>
+<li>Update mengikuti patch resmi game</li>
+<li>Panduan instalasi dari admin</li>
+<li>Garansi selama masa aktif lisensi</li>
+<li>Support via Discord &amp; WhatsApp</li>
+<li>Setelan seimbang, minim risiko</li>
+</ul>
+<p style="margin-top: 14px; font-size: 13px; color: var(--text-tertiary); font-style: italic;">Daftar fitur lengkap dan changelog terbaru bisa dicek di server Discord kami.</p>
+</div></div>
 <div class="tab-panel" id="panduan">
 <p>Ikuti langkah berikut agar pesanan cepat diproses:</p>
 <ul class="info-list">
@@ -457,6 +477,7 @@ function cartFromUrl() {
 }
 
 function getCart() {
+    if (window.RyuhuuCart) return RyuhuuCart.read();
     if (HAS_STORAGE) {
         try {
             const raw = window.localStorage.getItem(CART_KEY);
@@ -471,6 +492,7 @@ function getCart() {
 }
 
 function saveCart(cart) {
+    if (window.RyuhuuCart) { RyuhuuCart.write(cart); return true; }
     memoryCart = cart;
     if (HAS_STORAGE) {
         try { window.localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
@@ -653,7 +675,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (addToCart()) {
             notify({ tone: 'success', title: 'Menuju keranjang', message: 'Item ditambahkan. Mengarahkan ke halaman keranjang...', duration: 2200 });
             contactInput.value = '';
-            setTimeout(function () { window.location.href = cartLink('../keranjang.html'); }, 1100);
+            setTimeout(function () { window.location.href = cartLink('../keranjang.html?checkout=1'); }, 1100);
         }
     });
 
@@ -661,5 +683,5 @@ document.addEventListener('DOMContentLoaded', function () {
     updateSelection();
 });
 </script>
-<nav aria-label="Navigasi cepat" id="product-dock"><a href="../index.html"><i class="fas fa-house"></i>Store</a><a href="../keranjang.html"><i class="fas fa-shopping-bag"></i>Cart</a><a href="https://wa.me/6285117065033" rel="noopener noreferrer" target="_blank"><i class="fas fa-headset"></i>Admin</a></nav><script src="../assets/product-theme.js"></script></body>
+<script src="../assets/product-theme.js"></script><nav aria-label="Navigasi cepat" class="mobile-dock" id="mobile-dock"><div class="dock-items"><a aria-label="Store" class="dock-item" href="../index.html"><i aria-hidden="true" class="fas fa-house"></i><span class="dock-label">Store</span></a><a aria-label="Games" class="dock-item" href="../index.html#games"><i aria-hidden="true" class="fas fa-gamepad"></i><span class="dock-label">Games</span></a><a aria-label="Cari produk" class="dock-item" href="../index.html#search-input"><i aria-hidden="true" class="fas fa-search"></i><span class="dock-label">Search</span></a><a aria-label="Keranjang" class="dock-item" href="../keranjang.html"><i aria-hidden="true" class="fas fa-shopping-bag"></i><span class="dock-label">Cart</span><span class="dock-count" hidden="" id="dock-cart-count"></span></a><a aria-label="Hubungi admin" class="dock-item" href="https://wa.me/6285117065033" rel="noopener noreferrer" target="_blank"><i aria-hidden="true" class="fas fa-headset"></i><span class="dock-label">Admin</span></a></div></nav><script src="../assets/cart-bridge.js"></script><script src="../assets/product-dock.js"></script></body>
 </html>

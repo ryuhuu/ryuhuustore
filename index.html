@@ -27,7 +27,7 @@
     <title>Ryuhuu Store | Digital Product Store</title>
     <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js');
+    navigator.serviceWorker.register('/sw.js').catch(() => { /* Optional on deployments without sw.js. */ });
   }
 </script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -749,10 +749,10 @@
 <link rel="apple-touch-icon" href="icon-192.png" />
 <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js');
+    navigator.serviceWorker.register('/sw.js').catch(() => { /* Optional on deployments without sw.js. */ });
   }
 </script>
-</head>
+<script src="assets/cart-bridge.js"></script></head>
 <body class="antialiased min-h-screen flex flex-col font-sans selection:bg-blue-500/30">
     <div id="store-wallpaper" aria-hidden="true">
         <img src="assets/ryo-poster.jpg" alt="" fetchpriority="high" decoding="async" />

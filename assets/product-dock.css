@@ -1,0 +1,71 @@
+        /* Responsive scroll dock: shared by desktop, tablet, and phone. */
+        body { padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)); }
+        #contact-hub > button { display: none; }
+        #contact-popup { position: fixed; bottom: calc(118px + env(safe-area-inset-bottom, 0px)); right: max(24px, calc(50% - 240px)); margin: 0; max-width: calc(100vw - 32px); background-color: var(--bg-color); }
+        #toast-stack { bottom: calc(122px + env(safe-area-inset-bottom, 0px)); }
+            .mobile-dock {
+                --dock-ease: cubic-bezier(.22, 1, .36, 1);
+                display: block; position: fixed; z-index: 80;
+                left: 50%; bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+                width: min(calc(100% - 32px), 390px); padding: 7px;
+                border: 1px solid rgba(148,163,184,.25); border-radius: 36px;
+                background: rgba(248,250,252,.96); color: var(--text-main);
+                box-shadow: 0 10px 35px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.22);
+                transform: translateX(-50%);
+                transition: width .42s var(--dock-ease), padding .42s var(--dock-ease), border-radius .42s var(--dock-ease);
+                animation: dock-arrive .65s var(--dock-ease) both;
+            }
+            .dark .mobile-dock { background: rgba(15,23,42,.96); }
+            .dock-items { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 2px; }
+            .dock-item {
+                position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+                min-width: 0; min-height: 60px; padding: 7px 0; border: 0; border-radius: 28px;
+                background: transparent; color: var(--text-muted); cursor: pointer; -webkit-tap-highlight-color: transparent;
+                transition: min-height .42s var(--dock-ease), background .22s, color .22s, padding .42s var(--dock-ease);
+            }
+            .dock-item > i { font-size: 20px; line-height: 24px; transition: transform .42s var(--dock-ease); }
+            .dock-label { font-size: 10px; line-height: 14px; font-weight: 600; margin-top: 4px; max-height: 14px; opacity: 1;
+                transition: max-height .42s var(--dock-ease), margin .42s var(--dock-ease), opacity .2s; }
+            .dock-item:is([aria-current="page"], [aria-current="location"]) { background: rgba(59,130,246,.14); color: #2563eb; }
+            .dark .dock-item:is([aria-current="page"], [aria-current="location"]) { background: rgba(96,165,250,.16); color: #93c5fd; }
+            .dock-item:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+            .dock-item:active > i { transform: scale(.9); }
+            .dock-count { position: absolute; top: 3px; right: 7px; min-width: 17px; height: 17px; padding: 0 4px;
+                border-radius: 12px; background: #2563eb; color: white; font: 700 10px/17px system-ui,sans-serif; }
+            .dock-count[hidden] { display: none; }
+            .mobile-dock.is-compact { width: min(calc(100% - 64px), 304px); padding: 5px; border-radius: 30px; }
+            .mobile-dock.is-compact .dock-item { min-height: 44px; padding: 4px 0; }
+            .mobile-dock.is-compact .dock-label { max-height: 0; margin-top: 0; opacity: 0; overflow: hidden; }
+            .mobile-dock.is-compact .dock-count { top: 0; right: 0; }
+            @keyframes dock-arrive { from { opacity: 0; transform: translate(-50%, 24px) scale(.94); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+        @media (max-width: 767px) {
+            body { padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); }
+            #navbar > div { padding-left: 14px; padding-right: 14px; }
+            #navbar > div > div:last-child { gap: 6px; }
+            #navbar .header-cart { display: none; }
+            #navbar [data-lang="brand"] { font-size: 14px; }
+            #contact-hub > button { display: none; }
+            #contact-popup { position: fixed; bottom: calc(106px + env(safe-area-inset-bottom, 0px)); right: 16px; margin: 0; max-width: calc(100vw - 32px); }
+            #toast-stack { bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+        }
+
+        @media (min-width: 768px) {
+            .mobile-dock { width: 480px; padding: 8px; bottom: 24px; border-radius: 42px; }
+            .dock-items { gap: 4px; }
+            .dock-item { min-height: 66px; padding: 8px 0; border-radius: 32px; }
+            .dock-item > i { font-size: 22px; line-height: 26px; }
+            .dock-label { font-size: 13px; line-height: 18px; max-height: 18px; }
+            .mobile-dock.is-compact { width: 320px; padding: 7px; border-radius: 34px; }
+            .mobile-dock.is-compact .dock-item { min-height: 44px; }
+            .dock-count { top: 4px; right: 13px; }
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .dock-item:hover { color: #2563eb; background: rgba(59,130,246,.1); }
+            .dark .dock-item:hover { color: #93c5fd; background: rgba(96,165,250,.15); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .mobile-dock, .mobile-dock * { animation: none !important; transition: none !important; }
+        }
+
+
+#mobile-dock a{text-decoration:none}#mobile-dock{font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif}#mobile-dock .dock-label{white-space:nowrap}#mobile-dock .dock-item{font-family:inherit}#mobile-dock .dock-items[hidden]{display:none!important}#mobile-dock .dock-item>i{color:inherit}#mobile-dock{color:var(--clear-glass-ink)}html.light #mobile-dock{--text-main:#0f172a;--text-muted:#334155}html.dark #mobile-dock{--text-main:#f8fafc;--text-muted:#cbd5e1}@media(prefers-reduced-motion:reduce){#mobile-dock,#mobile-dock *{transition:none!important;animation:none!important}}
